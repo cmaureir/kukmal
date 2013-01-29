@@ -1,0 +1,65 @@
+# free_rubrikcat_instrumental
+# free_rubrikcat_musik
+# free_rubrikcat_tanz
+# free_rubrikcat_theater
+# free_rubrikcat_malen
+# free_rubrikcat_kunst
+# free_rubrikcat_foto
+# free_rubrikcat_schreib
+# free_rubrikcat_sprach
+# free_rubrikcat_philosophie
+# free_rubrikcat_geschicht
+# free_rubrikcat_kulinarisches
+#
+# free_inscat_kavlier
+# free_inscat_streich
+# free_inscat_blas
+# free_inscat_zupf
+# free_inscat_schlag
+# free_inscat_gesand
+#
+# free_sprachcat_de
+# free_sprachcat_en
+# free_sprachcat_es
+# free_sprachcat_fr
+# free_sprachcat_it
+# free_sprachcat_slawische
+# free_sprachcat_weitere
+#
+# sell_rubrikcat_zubehoer
+# sell_rubrikcat_raeume
+# sell_rubrikcat_therapie
+#
+# sell_zubcat_musik
+# sell_zubcat_tanz
+# sell_zubcat_theater
+# sell_zubcat_kuenstlerbedarf
+# sell_zubcat_foto
+# sell_zubcat_antiquariate
+# sell_zubcat_kochen
+#
+# sell_musikcat_noten
+# sell_musikcat_instrumente
+#sell_musikcat_alle
+#sell_musikcat_klavier
+#sell_musikcat_streich
+#sell_musikcat_blas
+#sell_musikcat_zupf
+#sell_musikcat_schlag
+#
+blog_gastautor
+blog_inhalt
+blog_allgemeines
+blog_musik
+blog_tanz
+blog_theater
+blog_malen
+blog_kunsthandwerk
+blog_foto
+blog_schreiben
+blog_sprachen
+blog_philosophie
+blog_geschichte
+blog_kulinarisches
+blog_therapien
+blog_buecher

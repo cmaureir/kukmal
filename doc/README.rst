@@ -1,0 +1,62 @@
+KuKmal
+-------
+
+Responsive theme modifications
+------------------------------
+
+* functions.php
+ * Adding the following line at the end of file:
+
+    require ( get_template_directory() . '/kukmalfunctions.php' );
+
+* header.php
+ * Adding the following content to the line 40, before the calling of the
+   function wp_head().
+
+   <!-- KuKmal style -->
+   <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/kukmalstyle.css">
+   <script src="<?php echo get_template_directory_uri(); ?>/kukmal-jquery.min.js"></script>
+   <script src="<?php echo get_template_directory_uri(); ?>/kukmal.js"></script>
+   <!-- END KuKmal style -->
+
+
+* single.php
+ * Including the file called 'kukmaltable.php' to display the information table,
+   in the line 51.
+
+    <?php include('kukmaltable.php'); ?>
+
+KuKmal files
+-------------
+
+* kukmalimages directory.
+ * Some icons to display meta post information
+
+* Wordpress Post templates for each category
+ * kukmal_cat_foto.php
+ * kukmal_cat_geschichte.php
+ * kukmal_cat_instrumental.php
+ * kukmal_cat_kulinarisches.php
+ * kukmal_cat_kunsthandwerkskurse.php
+ * kukmal_cat_kurse.php
+ * kukmal_cat_malen.php
+ * kukmal_cat_philosophiekurse.php
+ * kukmal_cat_schreiben.php
+ * kukmal_cat_sprachunterricht.php
+ * kukmal_cat_tanz.php
+ * kukmal_cat_theater.php
+
+* The previous templates use the following file to display
+  the post information
+  * kukmal_cat.php
+
+
+* kukmalsearch.php
+ * Page to perform the special search, with all the WP database queries.
+
+* kukmalform.php
+ * File which contain the 'Special Search' table.
+ * This file is included in 'kukmalsearch.php'.
+
+* kukmalblog.php
+ * Page template to display only the post of the blog.
