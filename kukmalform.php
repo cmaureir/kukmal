@@ -46,7 +46,7 @@ $('#atype').change( function() {
 
     <!-- Type -->
     <tr>
-	<td>Type</td>
+	<td>Angebotsart</td>
         <td>
             <?php
             $options = array(
@@ -178,7 +178,10 @@ $('#atype').change( function() {
             }
             ?>
             </select>
-
+	    <br/>
+	    <p>
+		(Online- oder lokale Angebote)
+ 	    </p>
         </td>
     </tr>
     <!-- End of Category -->

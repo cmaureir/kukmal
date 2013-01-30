@@ -802,17 +802,15 @@ function add_login_logout_link($items, $args) {
  
     if($args->theme_location == 'top-menu') {
  
-        ob_start();
-	if (is_user_logged_in()) {  
-        	wp_loginout('index.php');
-	}
-	else {
-        	wp_loginout();
-	}
-        $loginoutlink = ob_get_contents();
-        ob_end_clean();
- 
-        $items .= '<li>'. $loginoutlink .'</li>';
+	global $current_user;
+        get_currentuserinfo();
+
+        if (is_user_logged_in()) {  
+		$items .= '<li><a href="'. wp_logout_url( home_url() ) .'" title="Logout" style="color: #A6A605; font-weight: bold;">Logout</a></li>';
+        }
+        else {
+		$items .= '<li><a href="'. wp_login_url( home_url() ) .'" title="Login" style="color: #A6A605; font-weight: bold;" >Login</a></li>';
+        }
  
     }
     return $items;
