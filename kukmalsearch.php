@@ -8,7 +8,7 @@ get_header();
 <?php
 // Search engine
 
-function get_posts_ids($rubrik, $zielgruppe, $plz, $kategorie)
+function get_posts_ids($type, $rubrik, $plz)
 {
     global $wpdb;
     // Queries to the DB and saving the results of each one
@@ -16,35 +16,24 @@ function get_posts_ids($rubrik, $zielgruppe, $plz, $kategorie)
     // Rubrik query
     $query = "select distinct $wpdb->postmeta.post_id
               from $wpdb->postmeta
-              where ( $wpdb->postmeta.meta_key='rubrik' and
+              where ( $wpdb->postmeta.meta_key='".$type."_rubrik' and
                       $wpdb->postmeta.meta_value like '".$rubrik."');";
     $result_rubrik = $wpdb->get_results($query);
 
-    // Zielgruppe query
-    $query = "select distinct $wpdb->postmeta.post_id
-              from $wpdb->postmeta
-              where ( $wpdb->postmeta.meta_key='zielgruppe' and
-                      $wpdb->postmeta.meta_value like '".$zielgruppe."' and
-                      $wpdb->postmeta.meta_value not like '".$no_ziel."');";
-    $result_ziel = $wpdb->get_results($query);
-
+    //echo $query."<br/><pre>";
+    //print_r($result_rubrik);
+    //echo "</pre><br/><br/>";
+   
     // PLZ query
     $query = "select distinct $wpdb->postmeta.post_id
               from $wpdb->postmeta
-              where ( $wpdb->postmeta.meta_key='plz' and
-                      $wpdb->postmeta.meta_value like '".$plz."') ";
-    if($kategorie == "ort")
-    {
-	$query = $query."and meta_value not like -1";
-    }
-    else if ($kategorie == "online")
-    {
-	$query = $query."and meta_value like -1";
-    }
-    $query = $query.";";
-    print_r($query);
-
+              where ( $wpdb->postmeta.meta_key='".$type."_plz' and
+                      $wpdb->postmeta.meta_value like '".$plz."');";
     $result_plz = $wpdb->get_results($query);
+    //echo $query."<br/><pre>";
+    //print_r($result_plz);
+    //echo "</pre><br/><br/>";
+
 
 
     // Adding all the ids to the same array
@@ -56,13 +45,6 @@ function get_posts_ids($rubrik, $zielgruppe, $plz, $kategorie)
     {
         array_push($ids,$row->post_id);
     }
-    foreach ($result_ziel as $row)
-    {
-        array_push($tmp,$row->post_id);
-    }
-    $ids = array_intersect($ids, $tmp);
-    unset($tmp);
-    $tmp = array();
     foreach ($result_plz as $row)
     {
         array_push($tmp,$row->post_id);
@@ -150,10 +132,10 @@ function display_results_sell($rows)
         global $post;
         $id = $post->ID;
 
-        $rubrik_value = get_field('rubrik', $id);
-        $rubrik = get_field_object('rubrik', $id);
+        $rubrik_value = get_field('sell_rubrik', $id);
+        $rubrik = get_field_object('sell_rubrik', $id);
         $rubrik = $rubrik['choices'][$rubrik_value];
-        $plz = get_field('plz');
+        $plz = get_field('sell_plz');
         ?>
         <div class="kukmalsingleinfo">
             <span class="kukmalinfo">Rubrik:</span>
@@ -177,7 +159,7 @@ function display_results_sell($rows)
     }
 }
 
-function display_results($rows)
+function display_results_free($rows)
 {
 
     global $post;
@@ -212,32 +194,32 @@ function display_results($rows)
         global $post;
         $id = $post->ID;
 
-        $zielgruppe = get_field_object('zielgruppe', $id);
-        $zielgruppe = $zielgruppe['choices'][get_field('zielgruppe',$id)];
+        $zielgruppe = get_field_object('free_zielgruppe', $id);
+        $zielgruppe = $zielgruppe['choices'][get_field($type.'free_zielgruppe',$id)];
 
-        $rubrik_value = get_field('rubrik', $id);
-        $rubrik = get_field_object('rubrik', $id);
+        $rubrik_value = get_field('free_rubrik', $id);
+        $rubrik = get_field_object('free_rubrik', $id);
         $rubrik = $rubrik['choices'][$rubrik_value];
-        if($rubrik_value == 'instrumental')
+        if($rubrik_value == 'free_musikunterricht')
         {
-            $value = get_field_object('instrumental',$id);
-            $value = $value['choices'][get_field('instrumental',$id)];
+            $value = get_field_object('free_musikunterricht',$id);
+            $value = $value['choices'][get_field('free_musikunterricht',$id)];
             if($value != "")
             {
                 $rubrik .= " (".$value.")";
             }
         }
-        else if ($rubrik == 'sprachunterricht')
+        else if ($rubrik == 'free_sprachunterricht')
         {
-            $value = get_field_object('sprachunterricht',$id);
-            $value = $value['choices'][get_field('sprachunterricht',$id)];
+            $value = get_field_object('free_sprachunterricht',$id);
+            $value = $value['choices'][get_field('free_sprachunterricht',$id)];
             if($value != "")
             {
                 $rubrik .= " (".$value.")";
             }
         }
-        $institution = get_field('institution');
-        $plz = get_field('plz');
+        $institution = get_field('free_institution');
+        $plz = get_field('free_plz');
         ?>
         <div class="kukmalsingleinfo">
             <span class="kukmalinfo">Rubrik:</span>
@@ -265,13 +247,13 @@ function display_results($rows)
     }
 }
 
-function order_rows_by_plz($rows)
+function order_rows_by_plz($rows,$type)
 {
     $tmp = array();
     
     foreach($rows as $row)
     {
-	$tmp[$row->ID] = get_field("plz",$row->ID);
+	$tmp[$row->ID] = get_field($type."_plz",$row->ID);
     }	
     asort($tmp); 
    
@@ -291,107 +273,95 @@ function order_rows_by_plz($rows)
 
 }
 
-
-function kukmal_search($items, $data, $type)
+function order_rows_random($rows,$type)
 {
-    global $wpdb;
-    if ($type == 1)
+    $tmp = array();
+    
+    foreach($rows as $row)
     {
-        // Getting the parameters of the form
-        $rubrik     = $data[0];
-        $zielgruppe = $data[1];
-        $plz        = $data[2]."%";
-        $kategorie  = $data[3];
+	$tmp[$row->ID] = get_field($type."_plz",$row->ID);
+    }	
 
 
-        // Saving the opposite zielgruppe for the filter
-        $no_ziel = "";
-        if(strtolower($zielgruppe) == 'kinder')
+    shuffle($tmp); 
+   
+    $new_rows = array();
+    foreach($tmp as $key => $value)
+    {
+        foreach($rows as $i => $post)
         {
-            $no_ziel = 'erwachsene';
-        }
-        else if (strtolower($zielgruppe) == 'erwachsene')
-        {
-            $no_ziel = 'kinder';
-        }
-        $zielgruppe = '%';
-
-        // Fixing the PLZ for the non-physical courses
-        if($plz == '-1%')
-        {
-            $plz = '%';
-        }
-
-        $ids = get_posts_ids($rubrik, $zielgruppe, $plz, $kategorie);
-
-        if ( count($ids) != "0")
-        {
-            $query = "select * from $wpdb->posts where post_status='publish' and (";
-
-            foreach ($ids as $id) {
-                $query = $query."ID = '".$id."' or ";
-            }
-            $query = substr_replace($query ,"",-3);
-            $query = $query.");";
-
-            $rows = $wpdb->get_results($query);
-            // Check if the results are not 'non-published' post
-            if (empty($rows))
+	    if ($post->ID == $key)
             {
-                echo "<h2>keine Suchergebnisse gefunden</h2>";
+               array_push($new_rows, $post);
+               unset($rows[$i]);
             }
-            else
-            {
-                $rows = order_rows_by_plz($rows);
-                display_results($rows);
-            }
-        }
-        else
-        {
-            echo "<h2>keine Suchergebnisse gefunden</h2>";
         }
     }
-    else if ($type == 2)
+    return $new_rows;
+
+}
+
+function kukmal_search($data, $type)
+{
+    global $wpdb;
+    // Getting the parameters of the form
+    $rubrik     = $data[0]; // rubrik value
+    $plz        = $data[1]; // plz value
+
+
+    // Fixing the PLZ for the non-physical courses
+    // -2 : all
+    if($plz == '-2')
     {
-        // Getting the parameters of the form
-        $rubrik     = $data[0];
-        $plz        = $data[1]."%";
+        $plz = '%';
+    }
+    // -1 : überregional/online
+    else if($plz == '-1')
+    {
+        $plz = '-1'; // yes, we keep the same
+    }
+    else
+    {
+	// at this point, we know that is a normal PLZ number.
+    }
 
-        // Fixing the PLZ for the non-physical courses
-        if($plz == '-1%')
-        {
-            $plz = '%';
+    $ids = get_posts_ids($type, $rubrik, $plz);
+
+    if ( count($ids) != "0")
+    {
+        $query = "select * from $wpdb->posts where post_status='publish' and (";
+
+        foreach ($ids as $id) {
+            $query = $query."ID = '".$id."' or ";
         }
+        $query = substr_replace($query ,"",-3);
+        $query = $query.");";
 
-        $ids = get_posts_ids_sell($rubrik, $plz);
-
-        if ( count($ids) != "0")
-        {
-            $query = "select * from $wpdb->posts where post_status='publish' and (";
-
-            foreach ($ids as $id) {
-                $query = $query."ID = '".$id."' or ";
-            }
-            $query = substr_replace($query ,"",-3);
-            $query = $query.");";
-
-            $rows = $wpdb->get_results($query);
-            // Check if the results are not 'non-published' post
-            if (empty($rows))
-            {
-                echo "<h2>keine Suchergebnisse gefunden</h2>";
-            }
-            else
-            {
-                $rows = order_rows_by_plz($rows);
-                display_results_sell($rows);
-            }
-        }
-        else
+        $rows = $wpdb->get_results($query);
+        // Check if the results are not 'non-published' post
+        if (empty($rows))
         {
             echo "<h2>keine Suchergebnisse gefunden</h2>";
         }
-
+        else
+        {
+	    if ($plz != "-1" and $plz != "%")
+	    {
+            	$rows = order_rows_by_plz($rows, $type);
+            }
+	    else if ($plz == "-1")
+	    {
+            	$rows = order_rows_random($rows, $type);
+            }
+	    if ($type == "free")
+            	display_results_free($rows);
+	    else if ($type == "sell")
+            	display_results_sell($rows);
+        }
+    }
+    else
+    {
+        echo "<h2>keine Suchergebnisse gefunden</h2>";
     }
 }
 
@@ -408,47 +378,43 @@ $form_status = true;
 $data = array();
 
 // Type of the query
-$type = $_POST["type"];
+$type = $_POST["atype"];
 
 if(isset($type))
 {
-    if($type == 1)
+    // This will define which SELECT field i need to check the value for the rubrik
+    if($type == "free")
     {
-        $items = array('rubrik',
-                       'zielgruppe',
-                       'plz',
-			'kategorie');
+        array_push($data, $_POST['rubrik_free']);
     }
-    else if($type == 2)
+    else if($type == "sell")
     {
-        $items = array('rubrik_sell',
-                       'plz');
+        array_push($data, $_POST['rubrik_sell']);
     }
-
-    foreach ($items as $item)
+    else
     {
-        if (isset($_POST[$item]))
-        {
-            $value = $_POST[$item];
-            if(!isset($value) || $value == '')
-            {
-                $form_status = false;
-            }
-            else
-            {
-                array_push($data, $value);
-            }
-        }
-        else
-        {
-            $form_status = false;
-        }
+	// What do we need to do with Raum and therapie ?
     }
 
-    if($form_status)
+    // Every type of announcement need to know the Kategorie (all PLZ, by PLZ or online)
+    $kat = $_POST['kategorie'];
+    if ($kat == "%")
     {
-        kukmal_search($items, $data, $type);
+	// -2 means all PLZ
+        array_push($data, "-2");
     }
+    else if ($kat == "plz")
+    {
+	// the PLZ code
+	array_push($data, $_POST['plz']."%");
+    }
+    else if ($kat == "online")
+    {
+	// -1 means überregional/online
+	array_push($data, "-1");
+    }
+
+    kukmal_search($data, $type);
 }
 
 

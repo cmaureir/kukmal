@@ -49,34 +49,34 @@ function get_offer_categories($categories)
 	{
 		if ($c == 'free_inscat_klavier')
 		{
-			return array(10,12);
+			return array(1,8,9,12);
 		}
 		else if($c == 'free_inscat_streich')
 		{
-			return array(10,13);
+			return array(1,8,9,13);
 		}
 		else if($c == 'free_inscat_blas')
 		{
-			return array(10,14);
+			return array(1,8,9,14);
 		}
 		else if($c == 'free_inscat_zupf')
 		{
-			return array(10,15);
+			return array(1,8,9,15);
 		}
 		else if($c == 'free_inscat_schlag')
 		{
-			return array(10,16);
+			return array(1,8,9,16);
 		}
 		else if($c == 'free_inscat_gesand')
 		{
-			return array(10);
+			return array(1,8,9);
 		}
 	}
 	else if ($sprach)
 	{
 		// All the subcategories need the same sell
 		// category, so we just return the  value
-		return array(6);
+		return array(1,6);
 	}
 	else
 	{
@@ -85,27 +85,43 @@ function get_offer_categories($categories)
 		// so is one of the other Rubrik categories.
 		if($c == 'free_rubrikcat_musik')
 		{
-			return array(9);
+			return array(1,8,9);
 		} 
 		else if($c == 'free_rubrikcat_tanz')
 		{
-			return array(2);
+			return array(1,2,9);
 		} 
 		else if($c == 'free_rubrikcat_theater')
 		{
-			return array(3);
+			return array(1,3,9);
 		} 
-		else if($c == 'free_rubrikcat_malen' or $c == 'free_rubrikcat_kunst')
+		else if($c == 'free_rubrikcat_malen')
 		{
-			return array(4);
+			return array(1,4,9);
+		} 
+		else if($c == 'free_rubrikcat_kunst')
+		{
+			return array(1,4,9);
+		} 
+		else if($c == 'free_rubrikcat_kleinkunst')
+		{
+			return array(1,8,17);
 		} 
 		else if($c == 'free_rubrikcat_foto')
 		{
-			return array(5);
+			return array(1,5,8);
 		} 
-		else if($c == 'free_rubrikcat_schreib' or $c == 'free_rubrikcat_philosophie' or $c == 'free_rubrikcat_geschicht')
+		else if($c == 'free_rubrikcat_schreib')
 		{
-			return array(6);
+			return array(1,6,8);
+		} 
+		else if($c == 'free_rubrikcat_philosophie')
+		{
+			return array(1,6,8);
+		} 
+		else if($c == 'free_rubrikcat_geschicht')
+		{
+			return array(1,6);
 		} 
 		else if($c == 'free_rubrikcat_kulinarisches')
 		{
@@ -116,25 +132,26 @@ function get_offer_categories($categories)
 
 function get_page_from_category($category)
 {
-	// The titles of the pages must be hardcoded because is easy to modify it
+	// The titles of the pages (sell) must be hardcoded because is easy to modify it
 	// in the future, compared with the pages ids.
-
-
 	$pages = array(
+	1 => "Räume",
 	2 => "Zubehör Tanz",
 	3 => "Theaterbedarf",
 	4 => "Künstlerbedarf",
 	5 => "Zubehör für Fotografie und Film",
 	6 => "Buchläden und Antiquariate",
 	7 => "Zubehör Kochen",
+	8 => "Körpertherapien / Kunsttherapien",
 	9  => "Musikinstrumente und Noten",
-	10 => "Noten und Bücher (auch Antiquariate)",
+	//10 => "Noten und Bücher (auch Antiquariate)",
 	11 => "Musikinstrumente, alle Sparten",
 	12 => "Klavierhäuser, Klavierstimmer",
 	13 => "Streichinstrumente, Geigenbauer",
 	14 => "Blasinstrumente",
 	15 => "Zupfinstrumente",
 	16 => "Schlaginstrumente",
+	17 => "Körpertherapien / Kunsttherapien",
 	);
 
 
@@ -147,10 +164,6 @@ function get_page_from_category($category)
 function get_pages_from_categories($categories)
 {
 	$pages = Array();
-
-	// + 1 y 8
-	array_push($categories, 1);
-	array_push($categories, 8);
 
 	foreach($categories as $cat)
 	{
@@ -687,24 +700,27 @@ function adding_description()
     $user_roles = $current_user->roles;
     $user_role = array_shift($user_roles);
 
-    if ($user_role == 'freeuser')
+    if(strpos( $_SERVER[ 'REQUEST_URI' ], '/wp-admin/post-new.php' ) !== false)
     {
-	$message = 'Die Überschrift sollte vor allem etwas über Ihr Angebot und den Veranstaltungsort aussagen - für die Suchmaschine!';
-    }
-    else if ($user_role == 'selluser')
-    {
-	$message = 'Die Überschrift sollte vor allem etwas über Ihr Angebot und den Veranstaltungsort aussagen - für die Suchmaschine!';
-    }
+    	if ($user_role == 'freeuser')
+    	{
+    	    $message = 'Die Überschrift sollte vor allem etwas über Ihr Angebot und den Veranstaltungsort aussagen - für die Suchmaschine!';
+    	}
+    	else if ($user_role == 'selluser')
+    	{
+    	    $message = 'Die Überschrift sollte vor allem etwas über Ihr Angebot und den Veranstaltungsort aussagen - für die Suchmaschine!';
+    	}
 
-    if ($message)
-    {
-        ?><script>
-            jQuery(function($)
-            {
-                $('<div style="margin-bottom:15px; color:#999;"></div>').text('<?php echo $message; ?>').insertAfter('#wpbody-content .wrap h2:eq(0)');
-            });
-        </script><?php
-    }
+    	if ($message)
+    	{
+    	    ?><script>
+    	        jQuery(function($)
+    	        {
+    	            $('<div style="margin-bottom:15px; color:#999;"></div>').text('<?php echo $message; ?>').insertAfter('#wpbody-content .wrap h2:eq(0)');
+    	        });
+    	    </script><?php
+    	}
+     }
 }
 add_action('admin_footer', 'adding_description');
 

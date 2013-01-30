@@ -6,6 +6,24 @@ Template Name: Inserieren
 // Exit if accessed directly
 if ( !defined('ABSPATH')) exit;
 
+// Redirect if logged-in
+
+if ( is_user_logged_in() ) {
+    global $current_user;
+
+    $user_roles = $current_user->roles;
+    $user_role = array_shift($user_roles);
+
+    if ($user_role == 'freeuser' || $user_role == 'selluser' )
+    {
+	// Hard-coded! please update if it's necessary
+	header("Location: http://beta.kukmal.org/wp-admin/post-new.php");
+    }
+
+}
+// Display page content
+else {
+
 ?>
 <?php get_header(); ?>
 
@@ -61,3 +79,5 @@ if ( !defined('ABSPATH')) exit;
         </div><!-- end of #content -->
 
 <?php get_footer(); ?>
+
+<?php } ?>
