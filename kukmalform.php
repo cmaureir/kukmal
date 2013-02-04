@@ -157,7 +157,7 @@ $('#atype').change( function() {
     <td>Zielgruppe</td>
     <td>
     <?php
-                $options = array('%' => 'Alles',
+                $options = array('%' => 'Kinder und Erwachsene',
                         'Kinder' => 'Kinder',
                         'Erwachsene' => 'Erwachsene');
                 ?>
@@ -181,23 +181,15 @@ $('#atype').change( function() {
     <!-- End of Zielgruppe -->
 
 
-    <!-- Sortierung -->
-    <tr id="sortierung">
-	<td>Sortierung</td>
-	<td></td>
-    </tr>
-    <!-- End of Sortierung -->
-
-
     <!-- Kategorie -->
     <tr id="kategorie">
-        <td>Angebotsart</td>
+        <td>Sortierung</td>
         <td class="alt">
             <?php
             $options = array(
-                    '%'      => 'Alle Angebote',
                     'plz'    => 'Angebote sortiert nach PLZ',
-                    'online' => 'Überregionale und Online-Angebote');
+                    'online' => 'Überregionale und Online-Angebote',
+                    '%'      => 'Alle Angebote');
             ?>
             <select name="kategorie" id="kategorie">
             <?php
@@ -214,16 +206,12 @@ $('#atype').change( function() {
             }
             ?>
             </select>
-	    <br/>
-	    <p>
-		(Online- oder lokale Angebote)
- 	    </p>
         </td>
     </tr>
     <!-- End of Category -->
 
     <!-- PLZ -->
-    <tr id="plz" <?php if (!isset($_POST['kategorie']) || $_POST['kategorie'] != "plz") { ?>style="display:none;" <?php } ?>>
+    <tr id="plz" >
         <td>PLZ</td>
         <td>
             <input type="number" name="plz" value="<?php

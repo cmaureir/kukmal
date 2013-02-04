@@ -37,96 +37,101 @@ function get_offer_categories($categories)
 		}
 	}
 
-	if(count($categories) != 1)
-		echo "An extra category?<br/>";
-	
-	// Relations between Free and Sell
-	$cat = array_values($categories);
-	$cat = $cat[0];
-	$c = get_cat_slug($cat);
+	if(count($categories) >= 1)
+        {	
+	   // Relations between Free and Sell
+	   $cat = array_values($categories);
+	   $cat = $cat[0];
+	   $c = get_cat_slug($cat);
 
-	if ($musik)
-	{
-		if ($c == 'free_inscat_klavier')
-		{
-			return array(1,8,9,12);
-		}
-		else if($c == 'free_inscat_streich')
-		{
-			return array(1,8,9,13);
-		}
-		else if($c == 'free_inscat_blas')
-		{
-			return array(1,8,9,14);
-		}
-		else if($c == 'free_inscat_zupf')
-		{
-			return array(1,8,9,15);
-		}
-		else if($c == 'free_inscat_schlag')
-		{
-			return array(1,8,9,16);
-		}
-		else if($c == 'free_inscat_gesand')
-		{
-			return array(1,8,9);
-		}
-	}
-	else if ($sprach)
-	{
-		// All the subcategories need the same sell
-		// category, so we just return the  value
-		return array(1,6);
+	   if ($musik)
+	   {
+	   	if ($c == 'free_inscat_klavier')
+	   	{
+	   		return array(1,8,9,12);
+	   	}
+	   	else if($c == 'free_inscat_streich')
+	   	{
+	   		return array(1,8,9,13);
+	   	}
+	   	else if($c == 'free_inscat_blas')
+	   	{
+	   		return array(1,8,9,14);
+	   	}
+	   	else if($c == 'free_inscat_zupf')
+	   	{
+	   		return array(1,8,9,15);
+	   	}
+	   	else if($c == 'free_inscat_schlag')
+	   	{
+	   		return array(1,8,9,16);
+	   	}
+	   	else if($c == 'free_inscat_gesand')
+	   	{
+	   		return array(1,8,9);
+	   	}
+	   }
+	   else if ($sprach)
+	   {
+	   	// All the subcategories need the same sell
+	   	// category, so we just return the  value
+	   	return array(1,6);
+	   }
+	   else
+	   {
+	   	// Here we know that the category left
+	   	// is not related to the Instrumental or Sprach
+	   	// so is one of the other Rubrik categories.
+	   	if($c == 'free_rubrikcat_musik')
+	   	{
+	   		return array(1,8,9);
+	   	} 
+	   	else if($c == 'free_rubrikcat_tanz')
+	   	{
+	   		return array(1,2,9);
+	   	} 
+	   	else if($c == 'free_rubrikcat_theater')
+	   	{
+	   		return array(1,3,9);
+	   	} 
+	   	else if($c == 'free_rubrikcat_malen')
+	   	{
+	   		return array(1,4,9);
+	   	} 
+	   	else if($c == 'free_rubrikcat_kunst')
+	   	{
+	   		return array(1,4,9);
+	   	} 
+	   	else if($c == 'free_rubrikcat_kleinkunst')
+	   	{
+	   		return array(1,8,17);
+	   	} 
+	   	else if($c == 'free_rubrikcat_foto')
+	   	{
+	   		return array(1,5,8);
+	   	} 
+	   	else if($c == 'free_rubrikcat_schreib')
+	   	{
+	   		return array(1,6,8);
+	   	} 
+	   	else if($c == 'free_rubrikcat_philosophie')
+	   	{
+	   		return array(1,6,8);
+	   	} 
+	   	else if($c == 'free_rubrikcat_geschicht')
+	   	{
+	   		return array(1,6);
+	   	} 
+	   	else if($c == 'free_rubrikcat_kulinarisches')
+	   	{
+	   		return array(7);
+	   	} 
+	   }
 	}
 	else
 	{
-		// Here we know that the category left
-		// is not related to the Instrumental or Sprach
-		// so is one of the other Rubrik categories.
-		if($c == 'free_rubrikcat_musik')
-		{
-			return array(1,8,9);
-		} 
-		else if($c == 'free_rubrikcat_tanz')
-		{
-			return array(1,2,9);
-		} 
-		else if($c == 'free_rubrikcat_theater')
-		{
-			return array(1,3,9);
-		} 
-		else if($c == 'free_rubrikcat_malen')
-		{
-			return array(1,4,9);
-		} 
-		else if($c == 'free_rubrikcat_kunst')
-		{
-			return array(1,4,9);
-		} 
-		else if($c == 'free_rubrikcat_kleinkunst')
-		{
-			return array(1,8,17);
-		} 
-		else if($c == 'free_rubrikcat_foto')
-		{
-			return array(1,5,8);
-		} 
-		else if($c == 'free_rubrikcat_schreib')
-		{
-			return array(1,6,8);
-		} 
-		else if($c == 'free_rubrikcat_philosophie')
-		{
-			return array(1,6,8);
-		} 
-		else if($c == 'free_rubrikcat_geschicht')
-		{
-			return array(1,6);
-		} 
-		else if($c == 'free_rubrikcat_kulinarisches')
-		{
-			return array(7);
-		} 
+		// Post with no categories
+		return array();
 	}
 }
 

@@ -8,13 +8,22 @@ $user_id = $postdata['Author_ID'];
 $user = new WP_User( $user_id );
 $user_role  = $user->roles[0];
 
+$type = "";
 
-if ($user_role == 'freeuser' || $user_role == 'selluser')
+if ($user_role == 'freeuser')
+	$type = "free";
+else if ($user_role == 'selluser')
+	$type = "sell";
+
+
+if ($type != "")
 {
-	$url1 = get_field('free_slideshow_1');
-	$url2 = get_field('free_slideshow_2');
-	$url3 = get_field('free_slideshow_3');
-	
+	$url1 = get_field($type . '_slideshow_1');
+	$url2 = get_field($type . '_slideshow_2');
+	$url3 = get_field($type . '_slideshow_3');
+
+	if ( get_field($type . '_slideshow') == 1 )
+	{
 	?>
 	<div id="slideshowsingle">
 	<?php
@@ -39,6 +48,11 @@ if ($user_role == 'freeuser' || $user_role == 'selluser')
 		?>
 	</div>
 	<?php
+	}
+	else
+	{
+		// No slideshow
+	}
 }
 
 ?>
