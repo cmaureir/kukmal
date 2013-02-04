@@ -383,6 +383,9 @@ function get_rubrik_category_slug($rubrik, $user_cat)
 		case 'free_kunsthandwerk';
 		    $tmp  =  'free_rubrikcat_kunst';
 		    break;
+		case 'free_kleinkunst';
+		    $tmp  =  'free_rubrikcat_kleinkunst';
+		    break;
 		case 'free_foto';
 		    $tmp  =  'free_rubrikcat_foto';
 		    break;
@@ -499,6 +502,9 @@ function get_zub_category($zub)
 			break;
 		case 'sell_kunst':
 			$tmp = 'sell_zubcat_kuenstlerbedarf';
+			break;
+		case 'sell_kleinkunst':
+			$tmp = 'sell_zubcat_kleinkunst';
 			break;
 		case 'sell_foto':
 			$tmp = 'sell_zubcat_foto';
@@ -621,7 +627,57 @@ function add_custom_category( $post_ID )
 add_action('publish_post',    'add_custom_category');
 add_action('pre_post_update', 'add_custom_category');
 //add_action('edit_post',       'add_custom_category');
+//add_action('wp_insert_post', 'add_custom_category');
 //add_action('save_post',       'add_custom_category');
+
+function add_usertype_category( $post_ID )
+{
+
+    global $wpdb;
+    global $current_user;
+
+    global $wp_roles;
+    
+    foreach ( $wp_roles->role_names as $role => $name ) :
+    	if ( current_user_can( $role ) )
+    		$user_role = $role;
+    endforeach;
+
+
+    $cat_tmp = array();
+
+    if ($user_role == 'freeuser')
+    {
+        $user_cat = "free";
+	array_push($cat_tmp, $user_cat);
+    }
+    else if ($user_role == 'selluser')
+    {
+        $user_cat = "sell";
+	array_push($cat_tmp, $user_cat);
+    }
+
+    //$slug = get_rubrik_category_slug($slug, $user_cat);
+    //array_push($cat_tmp, $slug);
+
+    if (!empty($cat_tmp))
+    {
+
+        // Getting categories
+        $category_ids = array();
+        foreach ($cat_tmp as $cat) {
+        	$idObj = get_category_by_slug($cat); 
+        	array_push($category_ids, $idObj->term_id);
+        }
+
+        $category_ids = array_map('intval', $category_ids);
+        $category_ids = array_unique( $category_ids );
+
+        wp_set_object_terms($post_ID, $category_ids, 'category');
+    }
+}
+//add_action('save_post',      'add_usertype_category');
+add_action('wp_insert_post', 'add_usertype_category');
 
 
 function add_thumbnail($post_id)
@@ -652,11 +708,11 @@ function change_default_title( $title ){
             $title = 'Z.B "Aquarellkurs in Berlin-Friedenau" oder "Schreiben online lernen"';
         }
     }
-    if ($user_role == 'selleuser')
+    if ($user_role == 'selluser')
     {
         $screen = get_current_screen();
         if  ( 'post' == $screen->post_type ) {
-            $title = 'Z.B "Aquarellkurs in Berlin-Friedenau" oder "Schreiben online lernen"';
+            $title = 'Digitalpianos - generalüberholt - online kaufen" oder "Antiquariat mit Schwerpunkt Philosophie in Heidelberg';
         }
     }
 
@@ -677,7 +733,7 @@ function change_default_title_label( $title ){
     $user_roles = $current_user->roles;
     $user_role = array_shift($user_roles);
 
-    if ($user_role == 'freeuser')
+    if ($user_role == 'freeuser' || $user_role == 'selluser')
     {
         global $wp_post_types;
         $labels = &$wp_post_types['post']->labels;
@@ -708,14 +764,19 @@ function adding_description()
     	}
     	else if ($user_role == 'selluser')
     	{
-    	    $message = 'Die Überschrift sollte vor allem etwas über Ihr Angebot und den Veranstaltungsort aussagen - für die Suchmaschine!';
+    	    $message = 'Die Überschrift sollte vor allem etwas über Ihr Angebot und Ihren Standort aussagen - für die Suchmaschine.';
     	}
+
+	$note_title = 'Bitte beachten:';
+	$note_content = 'Die Vorschau-Funktion und den Button zum "Veröffentlichen" finden Sie hier oben rechts!';
 
     	if ($message)
     	{
     	    ?><script>
     	        jQuery(function($)
     	        {
+    	            $('<div style="margin-bottom:15px; color: black;"></div>').text('<?php echo $note_content; ?>').insertAfter('#wpbody-content .wrap h2:eq(0)');
+    	            $('<div style="margin-bottom:15px; color: red;"></div>').text('<?php echo $note_title; ?>').insertAfter('#wpbody-content .wrap h2:eq(0)');
     	            $('<div style="margin-bottom:15px; color:#999;"></div>').text('<?php echo $message; ?>').insertAfter('#wpbody-content .wrap h2:eq(0)');
     	        });
     	    </script><?php
@@ -778,12 +839,8 @@ function list_kukmal_posts($category)
 	
 	<?php endwhile; else: ?>
 
-	<h1 class="title-404">
-		<?php _e('404 &#8212; Fancy meeting you here!', 'responsive'); ?>
-	</h1>
-	<p><?php _e('Don&#39;t panic, we&#39;ll get through this together. Let&#39;s explore our options here.', 'responsive'); ?></p>
-	<h6><?php _e( 'You can return', 'responsive' ); ?> <a href="<?php echo home_url(); ?>/" title="<?php esc_attr_e( 'Home', 'responsive' ); ?>"><?php _e( '&larr; Home', 'responsive' ); ?></a> <?php _e( 'or search for the page you were looking for', 'responsive' ); ?></h6>
-	<?php get_search_form(); ?>
+		<?php include('kukmal404.php'); ?>
+
 	<?php endif; ?>
 	
 	</div>
@@ -921,12 +978,8 @@ function list_kukmal_posts2($category)
 	
 	<?php endwhile; else: ?>
 
-	<h1 class="title-404">
-		<?php _e('404 &#8212; Fancy meeting you here!', 'responsive'); ?>
-	</h1>
-	<p><?php _e('Don&#39;t panic, we&#39;ll get through this together. Let&#39;s explore our options here.', 'responsive'); ?></p>
-	<h6><?php _e( 'You can return', 'responsive' ); ?> <a href="<?php echo home_url(); ?>/" title="<?php esc_attr_e( 'Home', 'responsive' ); ?>"><?php _e( '&larr; Home', 'responsive' ); ?></a> <?php _e( 'or search for the page you were looking for', 'responsive' ); ?></h6>
-	<?php get_search_form(); ?>
+		<?php include('kukmal404.php'); ?>
+
 	<?php endif; ?>
 	
 	</div>

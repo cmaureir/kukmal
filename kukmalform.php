@@ -152,10 +152,46 @@ $('#atype').change( function() {
     <!-- End of Rubrik Sell-->
 
 
+    <!-- Zielgruppe -->
+    <tr id="zielgruppe">
+    <td>Zielgruppe</td>
+    <td>
+    <?php
+                $options = array('%' => 'Alles',
+                        'Kinder' => 'Kinder',
+                        'Erwachsene' => 'Erwachsene');
+                ?>
+    <select name="zielgruppe">
+    <?php
+                foreach($options as $key => $value)
+                {
+                    if($_POST['zielgruppe'] == $key)
+                    {
+                        echo"<option value='".$key."' selected>".$value."</option>\n";
+                    }
+                    else
+                    {
+                        echo"<option value='".$key."'>".$value."</option>\n";
+                    }
+                }
+                ?>
+    </select>
+    </td>
+    </tr>
+    <!-- End of Zielgruppe -->
+
+
+    <!-- Sortierung -->
+    <tr id="sortierung">
+	<td>Sortierung</td>
+	<td></td>
+    </tr>
+    <!-- End of Sortierung -->
+
 
     <!-- Kategorie -->
     <tr id="kategorie">
-        <td>Kategorie</td>
+        <td>Angebotsart</td>
         <td class="alt">
             <?php
             $options = array(
