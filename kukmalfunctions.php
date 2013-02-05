@@ -385,7 +385,7 @@ function get_rubrik_category_slug($rubrik, $user_cat)
 		case 'free_malen';
 		    $tmp  =  'free_rubrikcat_malen';
 		    break;
-		case 'free_kunsthandwerk';
+		case 'free_kunst';
 		    $tmp  =  'free_rubrikcat_kunst';
 		    break;
 		case 'free_kleinkunst';
@@ -394,16 +394,16 @@ function get_rubrik_category_slug($rubrik, $user_cat)
 		case 'free_foto';
 		    $tmp  =  'free_rubrikcat_foto';
 		    break;
-		case 'free_schreiben';
+		case 'free_schreib';
 		    $tmp  =  'free_rubrikcat_schreib';
 		    break;
-		case 'free_sprachunterricht';
+		case 'free_sprach';
 		    $tmp  =  'free_rubrikcat_sprach';
 		    break;
 		case 'free_philosophie';
 		    $tmp  =  'free_rubrikcat_philosophie';
 		    break;
-		case 'free_geschichte';
+		case 'free_geschicht';
 		    $tmp  =  'free_rubrikcat_geschicht';
 		    break;
 		case 'free_kulinarisches';
@@ -629,11 +629,11 @@ function add_custom_category( $post_ID )
         wp_set_object_terms($post_ID, $category_ids, 'category');
     }
 }
-add_action('publish_post',    'add_custom_category');
-add_action('pre_post_update', 'add_custom_category');
+//add_action('publish_post',    'add_custom_category');
+//add_action('pre_post_update', 'add_custom_category');
 //add_action('edit_post',       'add_custom_category');
 //add_action('wp_insert_post', 'add_custom_category');
-//add_action('save_post',       'add_custom_category');
+add_action('save_post',       'add_custom_category', 11);
 
 function add_usertype_category( $post_ID )
 {
