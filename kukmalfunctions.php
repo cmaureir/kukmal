@@ -207,367 +207,434 @@ function get_offer_widget($id, $categories)
 }
 
 /* 
- * Information table displayer in a single post (free)
- * 
- * Status: Pending
- * */
+* Information table displayer in a single post (free)
+* 
+* Status: Pending
+* */
 function get_free_table($id)
 {
-    $rubrik  = get_field('free_rubrik', $id);
-    $zielgruppe   = get_field_object('free_zielgruppe', $id);
-    $zielgruppe   = $zielgruppe['choices'];
-    $zielgruppe   = $zielgruppe[get_field('free_zielgruppe',$id)];
-    $rubrik_value = get_field_object('free_rubrik', $id);
-    $rubrik_value = $rubrik_value['choices'];
-    $rubrik_value = $rubrik_value[$rubrik];
+$rubrik  = get_field('free_rubrik', $id);
+$zielgruppe   = get_field_object('free_zielgruppe', $id);
+$zielgruppe   = $zielgruppe['choices'];
+$zielgruppe   = $zielgruppe[get_field('free_zielgruppe',$id)];
+$rubrik_value = get_field_object('free_rubrik', $id);
+$rubrik_value = $rubrik_value['choices'];
+$rubrik_value = $rubrik_value[$rubrik];
 
-    echo"
-        <h3>Information</h3>
-        <table>
-            <tr>
-                <td><b>Rubrik</b></td>
-                <td> ".$rubrik_value;
+echo"
+<h3>Information</h3>
+<table>
+    <tr>
+	<td><b>Rubrik</b></td>
+	<td> ".$rubrik_value;
 
-                if($rubrik == 'free_musikunterricht')
-                {
-                    $detail = get_field_object('free_musikunterricht',$id);
-                    $detail = $detail['choices'][get_field('free_musikunterricht')];
-                    echo "<br/>($detail)";
-                }
-                else if ($rubrik == 'free_sprachunterricht')
-                {
-                    $detail = get_field_object('free_sprachunterricht');
-                    $detail = $detail['choices'][get_field('free_sprachunterricht')];
-                    echo "<br/>($detail)";
-                }
+	if($rubrik == 'free_musikunterricht')
+	{
+	    $detail = get_field_object('free_musikunterricht',$id);
+	    $detail = $detail['choices'][get_field('free_musikunterricht')];
+	    echo "<br/>($detail)";
+	}
+	else if ($rubrik == 'free_sprachunterricht')
+	{
+	    $detail = get_field_object('free_sprachunterricht');
+	    $detail = $detail['choices'][get_field('free_sprachunterricht')];
+	    echo "<br/>($detail)";
+	}
 
-    echo"       </td></tr>
-                <tr>
-                    <td><b>Zielgruppe</b></td>
-                    <td>$zielgruppe</td>
-                </tr>";
-    $other_values = array('free_institution',
-                          'free_veranstaltungsort',
-                          'free_plz',
-                          'free_ortsname',
-                          'free_telefonnummer',
-                          'free_email',
-                          'free_weblink');
+echo"       </td></tr>
+	<tr>
+	    <td><b>Zielgruppe</b></td>
+	    <td>$zielgruppe</td>
+	</tr>";
+$other_values = array('free_institution',
+		  'free_veranstaltungsort',
+		  'free_plz',
+		  'free_ortsname',
+		  'free_telefonnummer',
+		  'free_email',
+		  'free_weblink');
 
-    foreach ($other_values as $val) {
-        $field = get_field_object($val,$id);
-        $field = $field['label'];
-        $value = get_field($val,$id);
-        if ($value != "" && $value != "0")
-        {
-            echo "
-            <tr>
-              <td><b>$field</b></td>";
+foreach ($other_values as $val) {
+$field = get_field_object($val,$id);
+$field = $field['label'];
+$value = get_field($val,$id);
+if ($value != "" && $value != "0")
+{
 
-            if ( $val == 'weblink' )
-            {
-                if( substr($value, 0, 7) != 'http://')
-                {
-                    $value = 'http://'.$value;
-                }
-                echo"
-                <td><a href='$value' rel='nofollow' target='_blank'>$value</a></td>
-            </tr>";
-            }
-            else
-            {
-                echo"
-                <td>$value</td>
-            </tr>";
-            }
-        }
+    if ( $val == 'free_weblink' )
+    {
+	if( substr($value, 0, 7) != 'http://')
+	{
+	    $value = 'http://'.$value;
+	}
+    echo "
+    <tr>
+      <td><b>$field</b></td>";
+	echo"
+	<td><a href='$value' rel='nofollow' target='_blank'>$value</a></td>
+    </tr>";
     }
-    echo "</table>";
+    else if ($val == 'free_adresse')
+    {
+	if (get_field('free_plz',$id) > 0 )
+	{
+		$addr = str_replace(" ", "+", $value);
+		$ort = get_field('free_ortsname',$id);
+		$gmaps = "http://maps.google.de/maps?q=".$addr."+".$ort;
+    echo "
+    <tr>
+      <td><b>$field</b></td>";
+		echo "<td><a href='$gmaps' rel='nofollow' target='_blank'>$value</a></td></tr>";
+	}
+    	else
+    	{
+    echo "
+    <tr>
+      <td><b>$field</b></td>";
+    	    echo"
+    	    <td>$value</td>
+    	</tr>";
+    	}
+    }	
+    else if ($val == 'free_plz')
+    {
+	if ($value > 0)
+	{
+    echo "
+    <tr>
+      <td><b>$field</b></td>";
+        	echo"
+        	<td>$value</td>
+            </tr>";
+	}
+    }
+    else
+    {
+    echo "
+    <tr>
+      <td><b>$field</b></td>";
+	echo"
+	<td>$value</td>
+    </tr>";
+    }
+}
+}
+echo "</table>";
 }
 
 /* 
- * Information table displayer in a single post (sell)
- * 
- * Status: Pending
- * */
+* Information table displayer in a single post (sell)
+* 
+* Status: Pending
+* */
 function get_sell_table($id)
 {
-    $rubrik  = get_field('sell_rubrik', $id);
-    $rubrik_value = get_field_object('sell_rubrik', $id);
-    $rubrik_value = $rubrik_value['choices'];
-    $rubrik_value = $rubrik_value[$rubrik];
+$rubrik  = get_field('sell_rubrik', $id);
+$rubrik_value = get_field_object('sell_rubrik', $id);
+$rubrik_value = $rubrik_value['choices'];
+$rubrik_value = $rubrik_value[$rubrik];
 
-    echo"
-        <h3>Information</h3>
-        <table>
-            <tr>
-                <td><b>Rubrik</b></td>
-                <td> ".$rubrik_value;
+echo"
+<h3>Information</h3>
+<table>
+    <tr>
+	<td><b>Rubrik</b></td>
+	<td> ".$rubrik_value;
 
-                if($rubrik == 'sell_zubehor')
-                {
-                    $detail = get_field_object('sell_zubehor',$id);
-                    $detail = $detail['choices'][get_field('sell_zubehor')];
-                    echo "<br/>, $detail";
-                    if (get_field('zubehor') == 'musikinstrumente')
-                    {
-                        $detail = get_field_object('musikinstrumente');
-                        $detail = $detail['choices'][get_field('musikinstrumente')];
-                        echo "<br/>($detail)";
-                    }
-                }
-
-    echo"       </td></tr>";
-    $other_values = array('name',
-                          'adresse',
-                          'plz',
-                          'ortsname',
-                          'telefonnummer',
-                          'email',
-                          'weblink');
-
-    foreach ($other_values as $val) {
-        $field = get_field_object($val,$id);
-        $field = $field['label'];
-        $value = get_field($val,$id);
-        if ($value != "" && $value != "0")
-        {
-            echo "
-            <tr>
-              <td><b>$field</b></td>";
-
-            if ( $val == 'weblink' )
-            {
-                if( substr($value, 0, 7) != 'http://')
-                {
-                    $value = 'http://'.$value;
-                }
-                echo"
-                <td><a href='$value' rel='nofollow' target='_blank'>$value</a></td>
-            </tr>";
-            }
-            else
-            {
-                echo"
-                <td>$value</td>
-            </tr>";
-            }
-        }
-    }
-    echo "</table>";
-}
-
-/*
- * Functions to get the category of the options
- * that the user select
- *
- * Status: OK
- */
-function get_rubrik_category_slug($rubrik, $user_cat)
-{
-	$tmp = '';
-	if($user_cat == 'free')
+	if($rubrik == 'sell_zubehor')
 	{
-	    switch($rubrik)
+	    $detail = get_field_object('sell_zubehor',$id);
+	    $detail = $detail['choices'][get_field('sell_zubehor')];
+	    echo "<br/>, $detail";
+	    if (get_field('zubehor') == 'sell_musik')
 	    {
-	        case 'free_musikunterricht':
-		    $tmp  =  'free_rubrikcat_instrumental';
-		    break;
-		case 'free_musik';
-		    $tmp  =  'free_rubrikcat_musik';
-		    break;
-		case 'free_tanz';
-		    $tmp  =  'free_rubrikcat_tanz';
-		    break;
-		case 'free_theater';
-		    $tmp  =  'free_rubrikcat_theater';
-		    break;
-		case 'free_malen';
-		    $tmp  =  'free_rubrikcat_malen';
-		    break;
-		case 'free_kunst';
-		    $tmp  =  'free_rubrikcat_kunst';
-		    break;
-		case 'free_kleinkunst';
-		    $tmp  =  'free_rubrikcat_kleinkunst';
-		    break;
-		case 'free_foto';
-		    $tmp  =  'free_rubrikcat_foto';
-		    break;
-		case 'free_schreib';
-		    $tmp  =  'free_rubrikcat_schreib';
-		    break;
-		case 'free_sprach';
-		    $tmp  =  'free_rubrikcat_sprach';
-		    break;
-		case 'free_philosophie';
-		    $tmp  =  'free_rubrikcat_philosophie';
-		    break;
-		case 'free_geschicht';
-		    $tmp  =  'free_rubrikcat_geschicht';
-		    break;
-		case 'free_kulinarisches';
-		    $tmp  =  'free_rubrikcat_kulinarisches';
-		    break;
-	    }
-
-	}	
-	else if($user_cat == 'sell')
-	{
-	    switch($rubrik)
-	    {
-		case 'sell_zubehoer':
-			$tmp = 'sell_rubrikcat_zubehoer';
-			break;
-		case 'sell_raeume':
-			$tmp = 'sell_rubrikcat_raeume';
-			break;
-		case 'sell_therapie':
-			$tmp = 'sell_rubrikcat_therapie';
-			break;
+		$detail = get_field_object('sell_musikinstrumente');
+		$detail = $detail['choices'][get_field('sell_musikinstrumente')];
+		echo "<br/>($detail)";
 	    }
 	}
 
-	return $tmp;
+echo"       </td></tr>";
+$other_values = array('sell_anbieter',
+		  'sell_adresse',
+		  'sell_plz',
+		  'sell_ortsname',
+		  'sell_telefon',
+		  'sell_email',
+		  'sell_weblink');
+
+foreach ($other_values as $val) {
+$field = get_field_object($val,$id);
+$field = $field['label'];
+$value = get_field($val,$id);
+if ($value != "" && $value != "0")
+{
+    echo "
+    <tr>
+      <td><b>$field</b></td>";
+
+    if ( $val == 'sell_weblink' )
+    {
+	if( substr($value, 0, 7) != 'http://')
+	{
+	    $value = 'http://'.$value;
+	}
+	echo"
+	<td><a href='$value' rel='nofollow' target='_blank'>$value</a></td>
+    </tr>";
+    }
+    else if ($val == 'sell_adresse')
+    {
+	if (get_field('sell_plz',$id) > 0 )
+	{
+		$addr = str_replace(" ", "+", $value);
+		$ort = get_field('sell_ortsname',$id);
+		$gmaps = "http://maps.google.de/maps?q=".$addr."+".$ort;
+		echo "<td><a href='$gmaps' rel='nofollow' target='_blank'>$value</a></td></tr>";
+	}
+    	else
+    	{
+    	    echo"
+    	    <td>$value</td>
+    	</tr>";
+    	}
+    }	
+    else if ($val == 'sell_plz')
+    {
+	if ($value > 0)
+	{
+        	echo"
+        	<td>$value</td>
+            </tr>";
+	}
+    }
+    else
+    {
+	echo"
+	<td>$value</td>
+    </tr>";
+    }
+}
+}
+
+
+
+
+
+echo "</table>";
+}
+
+/*
+* Functions to get the category of the options
+* that the user select
+*
+* Status: OK
+*/
+function get_rubrik_category_slug($rubrik, $user_cat)
+{
+$tmp = '';
+if($user_cat == 'free')
+{
+    switch($rubrik)
+    {
+	case 'free_musikunterricht':
+	    $tmp  =  'free_rubrikcat_instrumental';
+	    break;
+	case 'free_musik';
+	    $tmp  =  'free_rubrikcat_musik';
+	    break;
+	case 'free_tanz';
+	    $tmp  =  'free_rubrikcat_tanz';
+	    break;
+	case 'free_theater';
+	    $tmp  =  'free_rubrikcat_theater';
+	    break;
+	case 'free_malen';
+	    $tmp  =  'free_rubrikcat_malen';
+	    break;
+	case 'free_kunst';
+	    $tmp  =  'free_rubrikcat_kunst';
+	    break;
+	case 'free_kleinkunst';
+	    $tmp  =  'free_rubrikcat_kleinkunst';
+	    break;
+	case 'free_foto';
+	    $tmp  =  'free_rubrikcat_foto';
+	    break;
+	case 'free_schreib';
+	    $tmp  =  'free_rubrikcat_schreib';
+	    break;
+	case 'free_sprach';
+	    $tmp  =  'free_rubrikcat_sprach';
+	    break;
+	case 'free_philosophie';
+	    $tmp  =  'free_rubrikcat_philosophie';
+	    break;
+	case 'free_geschicht';
+	    $tmp  =  'free_rubrikcat_geschicht';
+	    break;
+	case 'free_kulinarisches';
+	    $tmp  =  'free_rubrikcat_kulinarisches';
+	    break;
+    }
+
+}	
+else if($user_cat == 'sell')
+{
+    switch($rubrik)
+    {
+	case 'sell_zubehoer':
+		$tmp = 'sell_rubrikcat_zubehoer';
+		break;
+	case 'sell_raeume':
+		$tmp = 'sell_rubrikcat_raeume';
+		break;
+	case 'sell_therapie':
+		$tmp = 'sell_rubrikcat_therapie';
+		break;
+    }
+}
+
+return $tmp;
 }
 
 function get_musik_category($musik)
 {
-	$tmp = '';
-	switch($musik)
-	{
-		case 'free_klavier':
-			$tmp = 'free_inscat_klavier';
-			break;
-		case 'free_streicher';
-			$tmp = 'free_inscat_streich';
-			break;
-		case 'free_blaeser';
-			$tmp = 'free_inscat_blas';
-			break;
-		case 'free_zupf';
-			$tmp = 'free_inscat_zupf';
-			break;
-		case 'free_schlag';
-			$tmp = 'free_inscat_schlag';
-			break;
-		case 'free_gesang';
-			$tmp = 'free_inscat_gesang';
-			break;
-	}
-	return $tmp;
+$tmp = '';
+switch($musik)
+{
+	case 'free_klavier':
+		$tmp = 'free_inscat_klavier';
+		break;
+	case 'free_streicher';
+		$tmp = 'free_inscat_streich';
+		break;
+	case 'free_blaeser';
+		$tmp = 'free_inscat_blas';
+		break;
+	case 'free_zupf';
+		$tmp = 'free_inscat_zupf';
+		break;
+	case 'free_schlag';
+		$tmp = 'free_inscat_schlag';
+		break;
+	case 'free_gesang';
+		$tmp = 'free_inscat_gesang';
+		break;
+}
+return $tmp;
 }
 
 function get_sprach_category($sprach)
 {
-	$tmp = '';
-	switch($sprach)
-	{
-		case 'free_de';
-			$tmp = 'free_sprachcat_de';
-			break;
-		case 'free_en';
-			$tmp = 'free_sprachcat_en';
-			break;
-		case 'free_es';
-			$tmp = 'free_sprachcat_es';
-			break;
-		case 'free_fr';
-			$tmp = 'free_sprachcat_fr';
-			break;
-		case 'free_it';
-			$tmp = 'free_sprachcat_it';
-			break;
-		case 'free_sl';
-			$tmp = 'free_sprachcat_sl';
-			break;
-		case 'free_nr';
-			$tmp = 'free_sprachcat_nr';
-			break;
-		case 'free_andere';
-			$tmp = 'free_sprachcat_weitere';
-			break;
-	}
-	return $tmp;
+$tmp = '';
+switch($sprach)
+{
+	case 'free_de';
+		$tmp = 'free_sprachcat_de';
+		break;
+	case 'free_en';
+		$tmp = 'free_sprachcat_en';
+		break;
+	case 'free_es';
+		$tmp = 'free_sprachcat_es';
+		break;
+	case 'free_fr';
+		$tmp = 'free_sprachcat_fr';
+		break;
+	case 'free_it';
+		$tmp = 'free_sprachcat_it';
+		break;
+	case 'free_sl';
+		$tmp = 'free_sprachcat_sl';
+		break;
+	case 'free_nr';
+		$tmp = 'free_sprachcat_nr';
+		break;
+	case 'free_andere';
+		$tmp = 'free_sprachcat_weitere';
+		break;
+}
+return $tmp;
 }
 
 function get_zub_category($zub)
 {
-	$tmp = '';
-	switch($zub)
-	{
-		case 'sell_musik':
-			$tmp = 'sell_zubcat_musik';
-			break;
-		case 'sell_tanz':
-			$tmp = 'sell_zubcat_tanz';
-			break;
-		case 'sell_theater':
-			$tmp = 'sell_zubcat_theater';
-			break;
-		case 'sell_kunst':
-			$tmp = 'sell_zubcat_kuenstlerbedarf';
-			break;
-		case 'sell_kleinkunst':
-			$tmp = 'sell_zubcat_kleinkunst';
-			break;
-		case 'sell_foto':
-			$tmp = 'sell_zubcat_foto';
-			break;
-		case 'sell_buecher':
-			$tmp = 'sell_zubcat_antiquariate';
-			break;
-		case 'sell_kochen':
-			$tmp = 'sell_zubcat_kochen';
-			break;
-	}
-	return $tmp;
+$tmp = '';
+switch($zub)
+{
+	case 'sell_musik':
+		$tmp = 'sell_zubcat_musik';
+		break;
+	case 'sell_tanz':
+		$tmp = 'sell_zubcat_tanz';
+		break;
+	case 'sell_theater':
+		$tmp = 'sell_zubcat_theater';
+		break;
+	case 'sell_kunst':
+		$tmp = 'sell_zubcat_kuenstlerbedarf';
+		break;
+	case 'sell_kleinkunst':
+		$tmp = 'sell_zubcat_kleinkunst';
+		break;
+	case 'sell_foto':
+		$tmp = 'sell_zubcat_foto';
+		break;
+	case 'sell_buecher':
+		$tmp = 'sell_zubcat_antiquariate';
+		break;
+	case 'sell_kochen':
+		$tmp = 'sell_zubcat_kochen';
+		break;
+}
+return $tmp;
 }
 function get_zub_musik_category($musik)
 {
-	$tmp = '';
-	switch($musik)
-	{
-		case 'sell_noten';
-			$tmp = 'sell_musikcat_noten';
-			break;
-		case 'sell_instrumente';
-			$tmp = 'sell_musikcat_instrumente';
-			break;
-		case 'sell_klavier';
-			$tmp = 'sell_musikcat_klavier';
-			break;
-		case 'sell_streicher';
-			$tmp = 'sell_musikcat_streich';
-			break;
-		case 'sell_blaeser';
-			$tmp = 'sell_musikcat_blas';
-			break;
-		case 'sell_zupf';
-			$tmp = 'sell_musikcat_zupf';
-			break;
-		case 'sell_schlag';
-			$tmp = 'sell_musikcat_schlag';
-			break;
-	}
+$tmp = '';
+switch($musik)
+{
+	case 'sell_noten';
+		$tmp = 'sell_musikcat_noten';
+		break;
+	case 'sell_instrumente';
+		$tmp = 'sell_musikcat_instrumente';
+		break;
+	case 'sell_klavier';
+		$tmp = 'sell_musikcat_klavier';
+		break;
+	case 'sell_streicher';
+		$tmp = 'sell_musikcat_streich';
+		break;
+	case 'sell_blaeser';
+		$tmp = 'sell_musikcat_blas';
+		break;
+	case 'sell_zupf';
+		$tmp = 'sell_musikcat_zupf';
+		break;
+	case 'sell_schlag';
+		$tmp = 'sell_musikcat_schlag';
+		break;
+}
 }
 
 /*
- * Add categories automatically to the post,
- * when the admin publish/update a post 
- * 
- * Status: OK
- */
+* Add categories automatically to the post,
+* when the admin publish/update a post 
+* 
+* Status: OK
+*/
 function add_custom_category( $post_ID )
 {
 
-    global $wpdb;
-    global $current_user;
+global $wpdb;
+global $current_user;
 
-    $postdata = get_postdata($id);
-    $user_id = $postdata['Author_ID'];
-    $user = new WP_User( $user_id );
-    $user_role  = $user->roles[0];
+$postdata = get_postdata($id);
+$user_id = $postdata['Author_ID'];
+$user = new WP_User( $user_id );
+$user_role  = $user->roles[0];
     $user_cat = "";
 
 
@@ -687,11 +754,21 @@ add_action('wp_insert_post', 'add_usertype_category');
 
 function add_thumbnail($post_id)
 {
-	$thumbnail = get_field('free_thumbnail');		
+    $postdata = get_postdata($post_id);
+    $user_id = $postdata['Author_ID'];
+    $user = new WP_User( $user_id );
+    $user_role  = $user->roles[0];
+
+    if ($user_role == 'freeuser')
+	$type = "free";
+    else if ($user_role == 'selluser')
+	$type = "sell";
+
+    $thumbnail = get_field($type. '_thumbnail');		
+    if ($thumbnail)
 	set_post_thumbnail( $post_id, $thumbnail );
 }
-add_action('publish_post',    'add_thumbnail');
-add_action('edit_post',       'add_thumbnail');
+add_action('save_post',    'add_thumbnail');
 add_action('pre_post_update', 'add_thumbnail');
 
 /*
@@ -717,7 +794,7 @@ function change_default_title( $title ){
     {
         $screen = get_current_screen();
         if  ( 'post' == $screen->post_type ) {
-            $title = 'Digitalpianos - generalüberholt - online kaufen" oder "Antiquariat mit Schwerpunkt Philosophie in Heidelberg';
+            $title = '"Digitalpianos online kaufen" oder  "Fremdsprachen-Antiquariat in Heidelberg"';
         }
     }
 
@@ -817,13 +894,17 @@ function list_kukmal_posts($category)
 	                <div class="post-entry">
 			<div style="float: left; padding: 5px;">
 				<?php
+				//if ( has_post_thumbnail() ) { // check if the post has a Post Thumbnail assigned to it.
+				//  the_post_thumbnail();
+				//} 
 	            		global $post;
 	            		$id = $post->ID;
-				$url = "http://www.nigeltomm.com/images/green_square_nigel_tomm_m.jpg";
+				$url = "";
 				if(has_post_thumbnail($id)) {
-				   $url = wp_get_attachment_url( get_post_thumbnail_id($post->ID));
+				   $url = wp_get_attachment_url( get_post_thumbnail_id($id));
+				   if ( $url != "")
+				       echo"<img src=\"$url\" width=\"100px\" height=\"100px\">";
 				}
-				echo"<img src=\"$url\" width=\"100px\" height=\"100px\">";
 				?>
 			</div>
 	                    <?php the_excerpt(__('Read more &#8250;', 'responsive')); ?>
@@ -956,13 +1037,18 @@ function list_kukmal_posts2($category)
 	                <div class="post-entry">
 			<div style="float: left; padding: 5px;">
 				<?php
+				//if ( has_post_thumbnail() ) { // check if the post has a Post Thumbnail assigned to it.
+				//  the_post_thumbnail();
+				//} 
+
 	            		global $post;
 	            		$id = $post->ID;
-				$url = "http://www.nigeltomm.com/images/green_square_nigel_tomm_m.jpg";
+				$url = "";
 				if(has_post_thumbnail($id)) {
-				   $url = wp_get_attachment_url( get_post_thumbnail_id($post->ID));
+				   $url = wp_get_attachment_url( get_post_thumbnail_id($id));
+				   if ( $url != "")
+					echo"<img src=\"$url\" width=\"100px\" height=\"100px\">";
 				}
-				echo"<img src=\"$url\" width=\"100px\" height=\"100px\">";
 				?>
 			</div>
 	                    <?php the_excerpt(__('Read more &#8250;', 'responsive')); ?>

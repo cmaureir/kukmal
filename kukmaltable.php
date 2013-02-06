@@ -7,12 +7,14 @@ foreach ($post_categories as $cat) {
     {
 	?>
 	<br/>
+	<div class="clear"></div> 
     	<div class="informationtable"><?php get_free_table($post->ID);   ?> </div>
 	<?php
     }
     else if ($cat == 'Sell') // Sell category!
     {
     	?>
+	<div class="clear"></div> 
     	<div class="informationtable"><?php get_sell_table($post->ID);    ?> </div>
 	<?php
     }

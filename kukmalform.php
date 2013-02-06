@@ -1,7 +1,7 @@
 <script type="text/javascript">
 
 $(document).ready(function() {  
-$('#kategorie').change( function() {
+$('#sortierung').change( function() {
     var $t = $(this).find("option:selected").val();
     if($t == "plz")
     {
@@ -21,16 +21,19 @@ $('#atype').change( function() {
     {
         $("#rubrikfree").show();
         $("#rubriksell").hide();
+        $("#zielgruppe").show();
     }
     else if($t == "sell")
     {
         $("#rubrikfree").hide();
         $("#rubriksell").show();
+        $("#zielgruppe").hide();
     }
     else if($t == "therapie" || $t == "raum")
     {
         $("#rubrikfree").hide();
         $("#rubriksell").hide();
+        $("#zielgruppe").hide();
     }
 
 });
@@ -82,18 +85,18 @@ $('#atype').change( function() {
 		// This are the values and names of the Custom Field plugin for Free announcements.
             $options = array(
                 'free_musikunterricht'   => 'Instrumental und Gesangsunterricht',
-                'free_musik'          => 'Weitere Kurse aus dem Bereich Musik',
-                'free_tanz'           => 'Tanzunterricht/Tanzkurse',
-                'free_theater'        => 'Theaterworkshops/Theaterkurse',
-                'free_malen'          => 'Malen und Zeichnen',
-                'free_kunst'          => 'Kunsthandwerkskurse',
-                'free_kleinkunst'     => 'Kleinkunst',
-                'free_foto'           => 'Kurse Fotografie und Film',
-                'free_schreib'        => 'Schreiben und Erzählen',
-                'free_sprach'         => 'Sprachunterricht',
-                'free_philosophie'    => 'Philosophiekurse',
-                'free_geschicht'      => 'Geschichtsworkshops',
-                'free_kulinarisches'  => 'Kulinarisches');
+                'free_musik'             => 'Weitere Kurse aus dem Bereich Musik',
+                'free_tanz'              => 'Tanzunterricht/Tanzkurse',
+                'free_theater'           => 'Theaterworkshops/Theaterkurse',
+                'free_malen'             => 'Malen und Zeichnen',
+                'free_kunst'             => 'Kunsthandwerkskurse',
+                'free_kleinkunst'        => 'Kleinkunst',
+                'free_foto'              => 'Kurse Fotografie und Film',
+                'free_schreib'           => 'Schreiben und Erzählen',
+                'free_sprach'            => 'Sprachunterricht',
+                'free_philosophie'       => 'Philosophiekurse',
+                'free_geschicht'         => 'Geschichtsworkshops',
+                'free_kulinarisches'     => 'Kulinarisches');
 
             ?>
             <select name="rubrik_free">
@@ -153,13 +156,13 @@ $('#atype').change( function() {
 
 
     <!-- Zielgruppe -->
-    <tr id="zielgruppe">
+    <tr name="zielgruppe" id="zielgruppe" <?php if (isset($_POST['atype']) && ($_POST['atype'] == "therapie" || $_POST['atype'] == "raum" || $_POST["atype"] == "sell" )) { ?>style="display:none;" <?php } ?>>
     <td>Zielgruppe</td>
     <td>
     <?php
-                $options = array('%' => 'Kinder und Erwachsene',
-                        'Kinder' => 'Kinder',
-                        'Erwachsene' => 'Erwachsene');
+                $options = array('%'          => 'Kinder und Erwachsene',
+                        	 'Kinder'     => 'Kinder',
+                        	 'Erwachsene' => 'Erwachsene');
                 ?>
     <select name="zielgruppe">
     <?php
@@ -181,8 +184,8 @@ $('#atype').change( function() {
     <!-- End of Zielgruppe -->
 
 
-    <!-- Kategorie -->
-    <tr id="kategorie">
+    <!-- Sortierung -->
+    <tr id="sortierung">
         <td>Sortierung</td>
         <td class="alt">
             <?php
@@ -191,11 +194,11 @@ $('#atype').change( function() {
                     'online' => 'Überregionale und Online-Angebote',
                     '%'      => 'Alle Angebote');
             ?>
-            <select name="kategorie" id="kategorie">
+            <select name="sortierung" id="sortierung">
             <?php
             foreach($options as $key => $value)
             {
-                if($_POST['kategorie'] == $key)
+                if($_POST['sortierung'] == $key)
                 {
                     echo"<option value='".$key."' selected>".$value."</option>\n";
                 }
@@ -211,7 +214,7 @@ $('#atype').change( function() {
     <!-- End of Category -->
 
     <!-- PLZ -->
-    <tr id="plz" >
+    <tr name="plz" id="plz" <?php if (isset($_POST['sortierung']) && $_POST['sortierung'] != "plz") { ?>style="display:none;" <?php } ?>>
         <td>PLZ</td>
         <td>
             <input type="number" name="plz" value="<?php
