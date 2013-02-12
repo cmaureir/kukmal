@@ -354,3 +354,11 @@
 	margin: 0;
 	padding: 0;
 }
+
+.home-bullet li.ok {
+list-style-type: none;
+background: url('http://beta.kukmal.org/wp-content/themes/responsive/kukmal/images/ok.png') no-repeat top left;
+padding-left: 40px;
+margin-left: 50px;
+margin-top: 10px;
+}

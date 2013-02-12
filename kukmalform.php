@@ -126,7 +126,7 @@ $('#atype').change( function() {
             <?php
 		// This are the values and names of the Custom Field plugin for Sell announcements.
             $options = array(
-		'sell_musik'      => 'Zubehör Musik',
+		'sell_musik'      => 'Musikinstrumente und Noten',
 		'sell_tanz'       => 'Zubehör Tanz',
 		'sell_theater'    => 'Theaterbedarf',
 		'sell_kunst'      => 'Künstlerbedarf',

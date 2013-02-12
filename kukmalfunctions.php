@@ -276,7 +276,7 @@ if ($value != "" && $value != "0")
     }
     else if ($val == 'free_adresse')
     {
-	if (get_field('free_plz',$id) > 0 )
+	if (get_field('free_plz',$id) > -1 )
 	{
 		$addr = str_replace(" ", "+", $value);
 		$ort = get_field('free_ortsname',$id);
@@ -298,7 +298,7 @@ if ($value != "" && $value != "0")
     }	
     else if ($val == 'free_plz')
     {
-	if ($value > 0)
+	if ($value > -1)
 	{
     echo "
     <tr>
@@ -385,7 +385,7 @@ if ($value != "" && $value != "0")
     }
     else if ($val == 'sell_adresse')
     {
-	if (get_field('sell_plz',$id) > 0 )
+	if (get_field('sell_plz',$id) > -1 )
 	{
 		$addr = str_replace(" ", "+", $value);
 		$ort = get_field('sell_ortsname',$id);
@@ -401,7 +401,7 @@ if ($value != "" && $value != "0")
     }	
     else if ($val == 'sell_plz')
     {
-	if ($value > 0)
+	if ($value > -1)
 	{
         	echo"
         	<td>$value</td>
@@ -617,6 +617,8 @@ switch($musik)
 		$tmp = 'sell_musikcat_schlag';
 		break;
 }
+
+	return $tmp;
 }
 
 /*
@@ -668,7 +670,7 @@ $user_role  = $user->roles[0];
 		$subslug = get_field('sell_zubehoer',$post_ID);
 		if($subslug == 'sell_musik')
 		{
-			$subsubslug = get_field('sell_musik',$post_ID);
+			$subsubslug = get_field('sell_musikinstrumente',$post_ID);
 	        	$subsubslug = get_zub_musik_category($subsubslug);
 			array_push($cat_tmp, $subsubslug);
 		}
