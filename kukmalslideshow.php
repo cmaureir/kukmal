@@ -18,6 +18,7 @@ else if ($user_role == 'selluser')
 
 if ($type != "")
 {
+	$thumb = get_field($type, '_thumbnail');
 	$url1 = get_field($type . '_slideshow_1');
 	$url2 = get_field($type . '_slideshow_2');
 	$url3 = get_field($type . '_slideshow_3');
@@ -27,6 +28,12 @@ if ($type != "")
 	?>
 	<div id="slideshowsingle">
 	<?php
+		if ($thumb != "")
+		{
+		?>
+			<div><img width="300px" height="300px" src="<?php echo $thumb; ?>"></div>
+		<?php
+		}
 		if ($url1 != "")
 		{
 		?>
